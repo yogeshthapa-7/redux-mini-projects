@@ -111,7 +111,7 @@
     <td width="50%" align="center">
       <h4 style="color: #dc2626; font-weight: 900;">LOGIN PAGE</h4>
       <div style="border: 3px solid #dc2626; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);">
-        <img src="./screenshots/login.png" alt="Login Page" width="100%" />
+        <img src="./app/screenshots/login.png" alt="Login Page" width="100%" />
       </div>
       <p style="color: #9ca3af; margin-top: 10px; font-size: 14px;">
         Glassmorphic inputs • Animated gradients • Real-time validation
@@ -120,7 +120,7 @@
     <td width="50%" align="center">
       <h4 style="color: #dc2626; font-weight: 900;">SIGNUP PAGE</h4>
       <div style="border: 3px solid #dc2626; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);">
-        <img src="./screenshots/signup.png" alt="Signup Page" width="100%" />
+        <img src="./app/screenshots/signup.png" alt="Signup Page" width="100%" />
       </div>
       <p style="color: #9ca3af; margin-top: 10px; font-size: 14px;">
         Smooth slider transition • Form validation • Premium styling
@@ -137,7 +137,7 @@
 <div align="center" style="margin: 20px 0;">
   <h4 style="color: #dc2626; font-weight: 900;">HOMEPAGE - THE GRID</h4>
   <div style="border: 3px solid #dc2626; border-radius: 10px; overflow: hidden; box-shadow: 0 20px 60px rgba(220, 38, 38, 0.4);">
-    <img src="./screenshots/homepage.png" alt="F1 Homepage" width="100%" />
+    <img src="./app/screenshots/homepage.png" alt="F1 Homepage" width="100%" />
   </div>
   <p style="color: #9ca3af; margin-top: 15px; font-size: 14px;">
     ⚡ 10 F1 Cars • 🎨 Team-specific colors • 🖼️ Hover animations • 📱 Responsive grid

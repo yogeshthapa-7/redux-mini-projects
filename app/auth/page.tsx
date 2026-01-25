@@ -1,4 +1,4 @@
-import AuthSlider from "../components/AuthSlider"
+import AuthSlider from "@/components/AuthSlider"
 
 export default function AuthPage() {
   return (

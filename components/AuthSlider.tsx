@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { useFormik } from "formik"
-import { loginSchema } from "../validation/loginSchema"
-import { signupSchema } from "../validation/signupSchema"
+import { loginSchema } from "@/lib/validation/loginSchema"
+import { signupSchema } from "@/lib/validation/signupSchema"
 
 export default function AuthSlider() {
   const [isSignup, setIsSignup] = useState(false)

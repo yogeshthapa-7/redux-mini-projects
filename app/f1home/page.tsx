@@ -1,9 +1,40 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import axios from "axios"
+import Image from "next/image"
 
 export default function F1Homepage() {
-  const [hoveredCard, setHoveredCard] = useState(null)
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null)
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("/api/auth/me")
+        setUser(response.data.user)
+      } catch (error) {
+        console.error("Failed to fetch user:", error)
+        router.push("/auth")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUser()
+  }, [router])
+
+  const handleLogout = async () => {
+    try {
+      await axios.post("/api/auth/logout")
+      router.push("/auth")
+    } catch (error) {
+      console.error("Logout failed:", error)
+    }
+  }
 
   const f1Cars = [
     {
@@ -88,26 +119,30 @@ export default function F1Homepage() {
     }
   ]
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-black relative overflow-hidden">
-      {/* Animated Background */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-20 left-20 w-96 h-96 bg-red-600 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-20 right-20 w-96 h-96 bg-red-800 rounded-full blur-3xl animate-pulse delay-1000"></div>
         <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-red-700 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
 
-      {/* Grid Pattern Overlay */}
       <div className="absolute inset-0 opacity-[0.02]" style={{
         backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 2px, #ef4444 2px, #ef4444 3px),
                           repeating-linear-gradient(90deg, transparent, transparent 2px, #ef4444 2px, #ef4444 3px)`,
         backgroundSize: '50px 50px'
       }}></div>
 
-      {/* Top Racing Stripe */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-600 to-transparent z-10"></div>
 
-      {/* Header */}
       <header className="relative z-20 border-b border-zinc-800/50 backdrop-blur-sm bg-black/30">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
@@ -125,15 +160,22 @@ export default function F1Homepage() {
               </div>
             </div>
 
-            <nav className="hidden md:flex items-center gap-8">
-              <a href="#" className="text-white font-bold hover:text-red-500 transition-colors text-sm uppercase tracking-wide">Cars</a>
-              
+            <nav className="flex items-center gap-8">
+              <div className="hidden md:flex items-center gap-6 mr-6 border-r border-zinc-800 pr-6">
+                <span className="text-gray-400 text-xs font-bold uppercase tracking-widest">Driver:</span>
+                <span className="text-white font-black text-sm uppercase tracking-tight">{user?.name || "Guest"}</span>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="px-6 py-2 bg-zinc-800/50 hover:bg-red-600 border border-zinc-700 hover:border-red-500 rounded-lg text-white font-bold text-xs uppercase tracking-widest transition-all duration-300"
+              >
+                Logout
+              </button>
             </nav>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
       <section className="relative z-10 pt-16 pb-12 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-4">
@@ -146,7 +188,7 @@ export default function F1Homepage() {
               THE GRID
             </h2>
             <p className="text-gray-400 text-lg font-medium max-w-2xl mx-auto">
-              Explore the most advanced racing machines in Formula 1 history
+              Welcome, {user?.name || "Racer"}. Explore the most advanced racing machines in Formula 1 history.
             </p>
             <div className="flex items-center justify-center gap-3 mt-6">
               <div className="w-20 h-1 bg-gradient-to-r from-transparent to-red-600 rounded-full"></div>
@@ -157,7 +199,6 @@ export default function F1Homepage() {
         </div>
       </section>
 
-      {/* Cars Grid */}
       <section className="relative z-10 px-6 pb-20">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -169,43 +210,31 @@ export default function F1Homepage() {
                 onMouseLeave={() => setHoveredCard(null)}
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                {/* Card */}
-                <div className="relative h-[420px] bg-gradient-to-br from-zinc-900 to-black rounded-2xl overflow-hidden border border-zinc-800/50 hover:border-red-600/50 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-red-600/20 group-hover:scale-[1.02]">
-                  
-                  {/* Top Accent Bar */}
+                <div className={`relative h-[420px] bg-gradient-to-br from-zinc-900 to-black rounded-2xl overflow-hidden border transition-all duration-500 shadow-xl ${hoveredCard === car.id ? 'border-red-600 shadow-red-600/20 scale-[1.02]' : 'border-zinc-800/50 shadow-2xl'}`}>
                   <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${car.color}`}></div>
 
-                  {/* Image Container */}
                   <div className="relative h-56 overflow-hidden bg-gradient-to-br from-zinc-800 to-zinc-900">
-                    {/* Overlay Gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10"></div>
-                    
-                    {/* Car Image */}
-                    <img
+                    <Image
                       src={car.image}
                       alt={car.model}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
+                      unoptimized
                     />
-
-                    {/* Hover Effect Line */}
                     <div className={`absolute inset-0 bg-gradient-to-r ${car.color} opacity-0 group-hover:opacity-20 transition-opacity duration-500`}></div>
-
-                    {/* Speed Lines */}
                     <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   </div>
 
-                  {/* Content */}
                   <div className="relative p-6 flex flex-col justify-between h-[calc(100%-224px)]">
-                    {/* Team Badge */}
                     <div className="mb-4">
                       <span className={`inline-block px-3 py-1 bg-gradient-to-r ${car.color} bg-opacity-20 rounded-full text-xs font-bold uppercase tracking-wide text-white border border-white/10`}>
                         {car.team}
                       </span>
                     </div>
 
-                    {/* Model Name */}
                     <div className="mb-4">
-                      <h3 className="text-2xl font-black text-white mb-1 tracking-tight group-hover:text-red-500 transition-colors">
+                      <h3 className={`text-2xl font-black mb-1 tracking-tight transition-colors ${hoveredCard === car.id ? 'text-red-500' : 'text-white'}`}>
                         {car.model}
                       </h3>
                       <div className="flex items-center gap-2">
@@ -216,18 +245,13 @@ export default function F1Homepage() {
                       </div>
                     </div>
 
-                    {/* View Details Button */}
                     <button className="w-full py-3 bg-zinc-800/50 border border-zinc-700/50 rounded-xl text-white font-bold text-sm uppercase tracking-widest hover:bg-zinc-800 hover:border-red-600/50 transition-all duration-300 group/btn relative overflow-hidden">
                       <span className="relative z-10">View Details</span>
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-600/10 to-transparent translate-x-[-200%] group-hover/btn:translate-x-[200%] transition-transform duration-1000"></div>
                     </button>
                   </div>
-
-                  {/* Corner Accent (appears on hover) */}
                   <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${car.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500 blur-2xl`}></div>
                 </div>
-
-                {/* Glow Effect (on hover) */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${car.color} opacity-0 group-hover:opacity-5 blur-3xl transition-opacity duration-500 -z-10 rounded-2xl`}></div>
               </div>
             ))}
@@ -235,7 +259,6 @@ export default function F1Homepage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="relative z-10 border-t border-zinc-800/50 bg-black/30 backdrop-blur-sm mt-20">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
@@ -257,8 +280,6 @@ export default function F1Homepage() {
           </div>
         </div>
       </footer>
-
-      {/* Bottom Racing Stripe */}
       <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-600 to-transparent z-10"></div>
     </div>
   )

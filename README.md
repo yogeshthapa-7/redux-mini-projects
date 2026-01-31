@@ -5,10 +5,10 @@ A modern Next.js application demonstrating Redux Toolkit state management throug
 ## 📸 Screenshots
 
 ### Redux Counter
-![Redux Counter](redux-mini-projects/screenshots/redux_counter.png)
+![Redux Counter](screenshots/redux_counter.png)
 
 ### Redux Box Resize
-![Redux Box Resize](redux-mini-projects/screenshots/redux_resize.png)
+![Redux Box Resize](screenshots/redux_resize.png)
 
 ## ✨ Features
 
